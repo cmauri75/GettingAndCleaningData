@@ -1,12 +1,12 @@
 rm(list=ls(all=TRUE))
 
-setwd("C:/TInvention/DataScience/ProgrammingAssignment-cd1")
+#setwd("C:/TInvention/DataScience/ProgrammingAssignment-cd1")
 library(dplyr)
 
-#Carico tutti i dataset e li mergio, sono width delimited di larghezza 16
-#la descrizione delle colonne la trovo in features.txt
-# ho inoltre due colonne aggiuntive fittizie, il soggetto (subject_test.txt)
-# e il tipo di osservazione (y_test.txt), la cui decodifica sta in activity_labels.txt
+#Load all interesting datasets
+# features.txt --> column names
+# subject_test.txt --> it's a virtual column containing subject id
+# y_test.txt --> virtual column containing activity_id, wich decoding is in activity_labels.txt
 xtrain <- read.table("UCIHARDataset/train/x_train.txt",header = FALSE)
 strain <- read.csv("UCIHARDataset/train/subject_train.txt",header=FALSE)
 ytrain <- read.csv("UCIHARDataset/train/y_train.txt",header=FALSE)
@@ -15,22 +15,22 @@ xtest <- read.table("UCIHARDataset/test/x_test.txt",header = FALSE)
 stest <- read.csv("UCIHARDataset/test/subject_test.txt",header=FALSE)
 ytest <- read.csv("UCIHARDataset/test/y_test.txt",header=FALSE)
 
+####1 Merges the training and the test sets to create one data set.
 subjects <- c(strain$V1,stest$V1)
 activities <- c(ytrain$V1,ytest$V1)
-rm("strain","stest","ytrain","ytest")
-
-####1 Merges the training and the test sets to create one data set.
 allData <- tbl_df(bind_rows(xtrain,xtest))
+
 #free up memory
+rm("strain","stest","ytrain","ytest")
 rm("xtest","xtrain")
 
 ####2 Extracts only the measurements on the mean and standard deviation for each measurement.
 
 #read the feature list
 featureList <- tbl_df(read.csv("UCIHARDataset/features.txt",sep=" ",header = FALSE))
-#get indexes with mean & std in title + subject&activity
+#get indexes with mean & std in title
 interestingFL <- filter(featureList,grepl("mean|std",featureList$V2) )
-#select interesting data
+#select interesting data + subj & actv
 intData <- select(allData,interestingFL$V1) %>%
     mutate(subject=subjects)  %>%
     mutate(activity=activities)
@@ -51,7 +51,5 @@ meanData <- intData %>%
     group_by(activity,subject) %>%
     summarise_each(funs(mean))
 
+#write out data
 write.table(meanData,"meanData.txt",row.name=FALSE)
-
-#write.csv2(intData,file = "intData.csv")
-#write.csv2(meanData,file = "meanData.csv")
