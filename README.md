@@ -20,7 +20,15 @@ Output file contains 180 rows and 81 variables:
 
 Note: Column names are the same in features.txt but lowercased and the caracters '(', ')' and '-' where removed for better readibility.
 
+## Steps to work on this course project
 
+1. clone repo in your local disk.
+2. run install.package("dplyr") if you already didn't
+3. Set your working directory using ```setwd()``` function in R (see commented line in top of file)
+4. Run ```source("run_analysis.R")```, then it will generate a new file ```meanData.txt``` in your working directory.
 
+## Dependencies
+
+* dplyr
 
 [archive.ics.uci.edu]: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
