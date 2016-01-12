@@ -51,6 +51,7 @@ meanData <- intData %>%
     group_by(activity,subject) %>%
     summarise_each(funs(mean))
 
+write.table(meanData,"meanData.txt",row.name=FALSE)
 
 #write.csv2(intData,file = "intData.csv")
 #write.csv2(meanData,file = "meanData.csv")
